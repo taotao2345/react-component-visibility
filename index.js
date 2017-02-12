@@ -2,11 +2,18 @@
   var React = (typeof window !== 'undefined' && window.React) ? window.React : require('react');
   var ReactDOM = (typeof window !== 'undefined' && window.ReactDOM) ? window.ReactDOM : require('react-dom');
 
-  var RATE_LIMIT = 25;
+  var RATE_LIMIT = 25,
+      MARGIN_HEIGHT = 0,
+      MARGIN_WIDTH = 0;
 
   var ComponentVisibilityMixin = {
     setComponentVisibilityRateLimit: function(milliseconds) {
       RATE_LIMIT = milliseconds;
+    },
+
+    setComponentVisibilityMargin: function(h, w) {
+      MARGIN_HEIGHT = h;
+      MARGIN_WIDTH = w;
     },
 
     getInitialState: function() {
@@ -34,12 +41,12 @@
           h = window.innerHeight,
           w = window.innerWidth,
           // are we vertically visible?
-          topVisible = 0 <= dims.top && dims.top <= h,
-          bottomVisible = 0 <= dims.bottom && dims.bottom <= h,
+          topVisible = 0 <= dims.top && dims.top <= h + MARGIN_HEIGHT,
+          bottomVisible = 0 <= dims.bottom + MARGIN_HEIGHT && dims.bottom <= h,
           verticallyVisible = topVisible || bottomVisible,
           // also, are we horizontally visible?
-          leftVisible = 0 <= dims.left && dims.left <= w,
-          rightVisible = 0 <= dims.right && dims.right <= w,
+          leftVisible = 0 <= dims.left && dims.left <= w + MARGIN_WIDTH,
+          rightVisible = 0 <= dims.right + MARGIN_WIDTH && dims.right <= w,
           horizontallyVisible = leftVisible || rightVisible,
           // we're only visible if both of those are true.
           visible = horizontallyVisible && verticallyVisible;
